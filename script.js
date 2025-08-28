@@ -23,7 +23,8 @@ function updateCoins(){
     getId("coin-balance").innerText = coins;
 }
   
-    for(const button of callButtons){
+
+for(const button of callButtons){
       button.addEventListener("click", function(e){
         // e.preventDefault();
         
@@ -41,17 +42,56 @@ function updateCoins(){
         alert(`Calling ${serviceName} at ${serviceNumber}`);
 
         // get current Time
+        const now = new Date()
+        const hours = now.getHours() % 12 || 12;
+        const minutes = now.getMinutes().toString().padStart(2, "0");
+        const amPm = now.getHours() >= 12 ? "PM" : "AM";
+        const time = `${hours}:${minutes} ${amPm}`
+
 
         const callHistoryContainer = getId("call-history-container");
-        getId("call-history-container").innerText = "";
+        
 
         const div = document.createElement("div");
         div.innerHTML = `
-
+            <div class="bg-[#dcdcdc] p-3 rounded-xl flex justify-between items-center m-3 mb-2">
+                        <div class="flex flex-col">
+                            <p class="font-bold text-sm">${serviceName}</p> 
+                            <p text-gray-300>${serviceNumber}</p>
+                        </div>
+                        <div>
+                        <p>${time}</p>
+                        </div>
+                    </div>
         `
+        callHistoryContainer.appendChild(div);
 
     })
-} 
+}
+
+getId("clear-btn").addEventListener("click", function(){
+    getId("call-history-container").innerText = "";
+})
+
+
+
+const copyBtns = document.querySelectorAll(".copy-btn")
+
+for(const copyBtn of copyBtns){
+    copyBtn.addEventListener("click", function(){
+        const card = copyBtn.closest(".card");
+        const serviceNum = card.querySelector(".service-number").innerText;
+        navigator.clipboard.writeText(serviceNum).then(() => {
+        alert(`Copied: ${serviceNum}`);
+        })
+        let count = Number(getId("copy-count").innerText);
+        count++;
+        getId("copy-count").innerText = count;
+        
+    });
+}
+
+
 
 
 
